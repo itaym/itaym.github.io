@@ -29,6 +29,12 @@ jobs:
           repository: itaym/react-any-event
           path: pkgs/react-any-event
 
+      - name: Checkout react-any-attr
+        uses: actions/checkout@v4
+        with:
+          repository: itaym/react-any-attr
+          path: pkgs/react-any-attr
+
       - name: Checkout isEllipsis
         uses: actions/checkout@v4
         with:
@@ -44,6 +50,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Build react-any-attr package
+        working-directory: pkgs/react-any-attr
+        run: |
+          npm install
+          npm run build
+
+      - name: Build react-any-event package
+        working-directory: pkgs/react-any-event
+        run: |
+          npm install
+          npm run build
 
       - name: Build react-any-event playground
         working-directory: pkgs/react-any-event/playground
