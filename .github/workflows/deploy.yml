@@ -110,8 +110,8 @@ jobs:
         run: npm run build
 
       - name: Build tab-indexer React example
-        working-directory: pkgs/tab-indexer
-        run: npx vite build examples/react --base ./ --outDir ../../site/public/playgrounds/tab-indexer
+        working-directory: pkgs/tab-indexer/examples/react
+        run: npx vite build --base ./ --outDir ../../../../site/public/playgrounds/tab-indexer
 
       - name: Install site deps
         working-directory: site
