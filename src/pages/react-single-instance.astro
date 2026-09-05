@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="react-single-instance" description="Render something at most once for a given id, app-wide.">
+  <h1>react-single-instance</h1>
+  <div class="pkg-badges">
+    <img alt="npm version" src="https://img.shields.io/npm/v/react-single-instance?logo=npm&logoColor=white" />
+    <img
+      alt="bundle size"
+      src="https://img.shields.io/bundlephobia/minzip/react-single-instance?logo=javascript&logoColor=white"
+    />
+    <img alt="license" src="https://img.shields.io/npm/l/react-single-instance?logo=open-source-initiative" />
+  </div>
+
+  <p>
+    A component, a hook, and a HOC that all share one registry: whichever call site claims an <code>id</code> first
+    wins, every other one renders nothing. Handy for a modal root, a toast host, or anything else that should exist
+    exactly once even if it gets mounted from two places by mistake.
+  </p>
+
+  <p>
+    The idea came out of a small coding exercise where "make sure there's only one modal, even if something renders
+    it twice" turned out to be a genuinely fiddly problem once <code>React.StrictMode</code> enters the picture -
+    StrictMode double-invokes a function component's render body in development, and there's no purity-safe way,
+    from inside render, to tell "my own StrictMode replay" apart from "a different caller". Pulling that logic out
+    into its own package, writing real tests against it, and fixing it properly surfaced two genuine bugs along the
+    way: the original had no per-instance memory (so a component re-rendering more than twice would silently stop
+    rendering, forever), and a "detect StrictMode" check that looked reasonable but statically evaluated to the same
+    value in every environment - dead code wearing a live wire's clothes.
+  </p>
+
+  <p>
+    <a href="https://github.com/itaym/react-single-instance" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://www.npmjs.com/package/react-single-instance" target="_blank" rel="noopener">npm</a>
+  </p>
+
+  <pre><code>npm i react-single-instance</code></pre>
+
+  <p class="section-label">Live playground</p>
+  <iframe class="playground-frame" title="react-single-instance playground" src="/playgrounds/react-single-instance/"
+  ></iframe>
+</Base>

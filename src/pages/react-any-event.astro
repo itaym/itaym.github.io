@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="react-any-event" description="Add any custom event to any HTML element in React.">
+  <h1>react-any-event</h1>
+  <div class="pkg-badges">
+    <img alt="npm version" src="https://img.shields.io/npm/v/react-any-event?logo=npm&logoColor=white" />
+    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/react-any-event?logo=javascript&logoColor=white" />
+    <img alt="license" src="https://img.shields.io/npm/l/react-any-event?logo=open-source-initiative" />
+  </div>
+
+  <p>
+    A <code>&lt;AnyEvent&gt;</code> component that wraps any HTML element (or subtree) and lets you define your own
+    custom events for it - including firing when a property changes <em>programmatically</em>, which native DOM
+    events don't cover. An input's <code>value</code> or a checkbox's <code>checked</code> can be set directly from
+    JS without ever dispatching a <code>change</code> event; this library watches the property itself so you can
+    react to that too.
+  </p>
+
+  <p>
+    The oldest package here, and the one that most benefited from a proper second look: the property-watching logic
+    only ever checked for a native getter/setter on the element <em>instance</em>, but almost every DOM property
+    worth watching (<code>value</code>, <code>checked</code>, <code>selected</code>) is actually defined on the
+    prototype - so the exact scenario the README leads with had been silently broken. Also gone: a runtime
+    <code>new Function(...)</code> that broke under any CSP disallowing <code>unsafe-eval</code>, used only to set a
+    function's <code>name</code> for debugging.
+  </p>
+
+  <p>
+    <a href="https://github.com/itaym/react-any-event" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://www.npmjs.com/package/react-any-event" target="_blank" rel="noopener">npm</a>
+  </p>
+
+  <pre><code>npm i react-any-event</code></pre>
+
+  <p class="section-label">Live playground</p>
+  <iframe class="playground-frame" title="react-any-event playground" src="/playgrounds/react-any-event/"></iframe>
+</Base>

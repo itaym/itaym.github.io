@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="isellipsis" description="Find out if an HTML element is currently truncating its text with an ellipsis.">
+  <h1>isellipsis</h1>
+  <div class="pkg-badges">
+    <img alt="npm version" src="https://img.shields.io/npm/v/isellipsis?logo=npm&logoColor=white" />
+    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/isellipsis?logo=javascript&logoColor=white" />
+    <img alt="license" src="https://img.shields.io/npm/l/isellipsis?logo=open-source-initiative" />
+  </div>
+
+  <p>
+    Find out if an element is <em>currently</em> truncating its text with an ellipsis (…) - a <code>div</code>, a
+    <code>span</code>, an <code>input</code>, a <code>-webkit-line-clamp</code> block, anything. Framework-agnostic
+    at its core (<code>isEllipsis()</code>, <code>measureEllipsis()</code>, <code>observeEllipsis()</code>), with a
+    React hook and a ready-made <code>&lt;EllipsisTooltip&gt;</code> component in
+    <code>@isellipsis/react</code>.
+  </p>
+
+  <p>
+    The v3 rewrite dropped the old approach of cloning the element and copying every computed style, in favor of
+    measuring non-input elements with a <code>Range</code> and inputs with canvas text metrics - both sub-pixel
+    accurate, so the old "use integer widths" caveat is gone, and the result is gated on an ellipsis actually being
+    painted rather than just "the text is technically too long".
+  </p>
+
+  <p>
+    <a href="https://github.com/itaym/isEllipsis" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://www.npmjs.com/package/isellipsis" target="_blank" rel="noopener">npm</a>
+  </p>
+
+  <pre><code>npm i isellipsis
+npm i @isellipsis/react</code></pre>
+
+  <p class="section-label">Live playground</p>
+  <iframe class="playground-frame" title="isellipsis playground" src="/playgrounds/isellipsis/"></iframe>
+</Base>

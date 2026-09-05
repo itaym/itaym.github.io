@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+
+const packages = [
+  {
+    href: '/react-single-instance',
+    name: 'react-single-instance',
+    tagline: 'Render something at most once for a given id, app-wide - a component, a hook, and a HOC.',
+  },
+  {
+    href: '/isellipsis',
+    name: 'isellipsis / @isellipsis/react',
+    tagline: 'Find out if an element is currently truncating its text with an ellipsis - framework-agnostic, plus a React hook.',
+  },
+  {
+    href: '/react-any-event',
+    name: 'react-any-event',
+    tagline: 'Add any custom event to any HTML element in React, including ones fired by programmatic attribute changes.',
+  },
+];
+---
+
+<Base title="Itay Merchav - packages">
+  <p>
+    A handful of small React/TypeScript packages, each doing one job. Every page below has a live playground you can
+    poke at directly in the browser.
+  </p>
+
+  {
+    packages.map((pkg) => (
+      <a class="card" href={pkg.href}>
+        <h3>{pkg.name}</h3>
+        <p>{pkg.tagline}</p>
+      </a>
+    ))
+  }
+</Base>
