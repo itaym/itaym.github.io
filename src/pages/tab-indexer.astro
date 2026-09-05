@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="tab-indexer" description="A tiny context counter for managing tabIndex values across a project.">
+  <h1>tab-indexer</h1>
+  <div class="pkg-badges">
+    <img alt="npm version" src="https://img.shields.io/npm/v/tab-indexer?logo=npm&logoColor=white" />
+    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/tab-indexer?logo=javascript&logoColor=white" />
+    <img alt="license" src="https://img.shields.io/npm/l/tab-indexer?logo=open-source-initiative" />
+  </div>
+
+  <p>
+    Keyboard tab order is supposed to follow reading order, but it actually follows <em>render</em> order - which
+    breaks the moment a modal, a nested dialog, or an out-of-order component enters the mix.
+    <code>tab-indexer</code> is a tiny, zero-dependency counter keyed by named "contexts" (<code>header</code>,
+    <code>form</code>, <code>modal</code>, ...), each with its own start value and step, plus a region API to
+    activate/deactivate a whole context - e.g. handing tab order over to a modal while it's open and back to the
+    page once it closes.
+  </p>
+
+  <p>
+    <code>@tab-indexer/react</code> wraps the same core in <code>useTabIndex()</code>, a
+    <code>&lt;TabScope&gt;</code> component that activates/deactivates its region in an effect (no render-purity
+    problems), and a <code>&lt;TabIndexProvider&gt;</code> for when a counter needs to be reactive to nested
+    activation. The interesting part was everything React breaks that a plain counter doesn't have to worry about:
+    a re-render calling the counter again and drifting it forward, <code>StrictMode</code>'s double-invoke, and SSR
+    sharing one module-level singleton across requests.
+  </p>
+
+  <p>
+    <a href="https://github.com/itaym/tab-indexer" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://www.npmjs.com/package/tab-indexer" target="_blank" rel="noopener">npm</a>
+  </p>
+
+  <pre><code>npm i tab-indexer
+npm i @tab-indexer/react</code></pre>
+
+  <p class="section-label">Live playground (React example)</p>
+  <iframe class="playground-frame" title="tab-indexer React example" src="/playgrounds/tab-indexer/"></iframe>
+</Base>

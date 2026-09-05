@@ -47,6 +47,12 @@ jobs:
           repository: itaym/react-single-instance
           path: pkgs/react-single-instance
 
+      - name: Checkout tab-indexer
+        uses: actions/checkout@v4
+        with:
+          repository: itaym/tab-indexer
+          path: pkgs/tab-indexer
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -56,6 +62,12 @@ jobs:
         run: |
           npm install
           npm run build
+
+      - name: Build react-any-attr playground
+        working-directory: pkgs/react-any-attr/playground
+        run: |
+          npm install
+          npx vite build --base ./ --outDir ../../../site/public/playgrounds/react-any-attr
 
       - name: Build react-any-event package
         working-directory: pkgs/react-any-event
@@ -88,6 +100,18 @@ jobs:
         run: |
           npm install
           npx vite build --base ./ --outDir ../../../site/public/playgrounds/react-single-instance
+
+      - name: Install tab-indexer workspace
+        working-directory: pkgs/tab-indexer
+        run: npm install
+
+      - name: Build tab-indexer packages
+        working-directory: pkgs/tab-indexer
+        run: npm run build
+
+      - name: Build tab-indexer React example
+        working-directory: pkgs/tab-indexer
+        run: npx vite build examples/react --base ./ --outDir ../../site/public/playgrounds/tab-indexer
 
       - name: Install site deps
         working-directory: site

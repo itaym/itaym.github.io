@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="react-any-attr" description="Add any custom HTML attribute to any element in React.">
+  <h1>react-any-attr</h1>
+  <div class="pkg-badges">
+    <img alt="npm version" src="https://img.shields.io/npm/v/react-any-attr?logo=npm&logoColor=white" />
+    <img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/react-any-attr?logo=javascript&logoColor=white" />
+    <img alt="license" src="https://img.shields.io/npm/l/react-any-attr?logo=open-source-initiative" />
+  </div>
+
+  <p>
+    React won't let you set an arbitrary HTML attribute it doesn't recognize - it either drops it or warns about it.
+    <code>&lt;AnyAttribute&gt;</code> (and the <code>useAnyAttributes</code> hook) wraps an element and applies
+    whatever attributes you give it directly to the DOM node, reactively: change the <code>attributes</code> prop on
+    a later render and the DOM updates to match, including removing keys that disappeared.
+  </p>
+
+  <p>
+    Three small helpers - <code>asObject</code>, <code>asString</code>, <code>asBoolean</code> - control exactly how
+    a value gets written: as a real HTML-idiomatic boolean attribute (present/absent, no <code>"true"</code>/
+    <code>"false"</code> strings), as a plain string visible in dev tools, or passed through untouched for anything
+    that isn't meant to show up in the markup at all.
+  </p>
+
+  <p>
+    <a href="https://github.com/itaym/react-any-attr" target="_blank" rel="noopener">Source</a> ·
+    <a href="https://www.npmjs.com/package/react-any-attr" target="_blank" rel="noopener">npm</a>
+  </p>
+
+  <pre><code>npm i react-any-attr</code></pre>
+
+  <p class="section-label">Live playground</p>
+  <iframe class="playground-frame" title="react-any-attr playground" src="/playgrounds/react-any-attr/"></iframe>
+</Base>
