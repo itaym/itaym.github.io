@@ -16,6 +16,20 @@ const { title, description = 'Small, focused React/TypeScript packages by Itay M
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url.href} />
+    <link rel="icon" href="/favicon.ico" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:image" content="https://github.com/itaym.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://github.com/itaym.png" />
+
     <script data-goatcounter="https://itaym.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </head>
   <body>
