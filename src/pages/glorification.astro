@@ -1,0 +1,355 @@
+---
+import { Code } from 'astro:components';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import Base from '../layouts/Base.astro';
+import examplesText from '../data/glorification-examples.txt?raw';
+
+const parts = examplesText.split(/^\/\/\/\/ (\S+)\n/m).slice(1);
+const ex: Record<string, string> = {};
+for (let i = 0; i < parts.length; i += 2) ex[parts[i]] = parts[i + 1];
+
+const diffBefore = [
+  ' const roles = [',
+  '   "admin",',
+  '-  "editor"',
+  '+  "editor",',
+  '+  "viewer"',
+  ' ];',
+].join('\n');
+
+const diffAfter = [
+  ' const roles = [',
+  "     'admin',",
+  "     'editor',",
+  "+    'viewer',",
+  ' ]',
+].join('\n');
+
+const install = 'npm i -D eslint prettier @glorification/eslint-config @glorification/prettier-config';
+
+const prettierSetup = `// package.json
+{
+    "prettier": "@glorification/prettier-config"
+}`;
+
+const vscode = `// .vscode/settings.json
+{
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+}`;
+---
+
+<Base
+  title="Glorification - a modern coding style for modern JavaScript"
+  description="Glorification: ESLint and Prettier configs for a modern coding style. No semicolons, arrow functions, async/await, and a linter that enforces it all - with many before/after examples."
+>
+  <article class="blog">
+    <p class="kicker">@glorification/eslint-config · @glorification/prettier-config</p>
+    <h1>Stop arguing about style in code review</h1>
+    <p class="lead">
+      Glorification is a modern coding style for modern JavaScript and TypeScript, packed as an ESLint config and a
+      Prettier config. You install it once. From then on, every file you save looks like it was written by the same
+      careful person.
+    </p>
+
+    <div class="pkg-badges">
+      <img alt="npm version" src="https://img.shields.io/npm/v/@glorification/eslint-config?logo=npm&logoColor=white" />
+      <img alt="ESLint" src="https://img.shields.io/npm/dependency-version/@glorification/eslint-config/peer/eslint?logo=eslint" />
+      <img alt="license" src="https://img.shields.io/npm/l/@glorification/eslint-config?logo=open-source-initiative" />
+    </div>
+
+    <p>
+      Here is a small user service, written the way most JavaScript is written today: Prettier's defaults and the
+      habits everybody picked up along the way. Next to it is the same service in the modern coding style.
+    </p>
+
+    <BeforeAfter before={ex['hero.before']} beforeLabel="Today's typical JavaScript" after={ex['hero.after']} />
+
+    <p>
+      Same behavior, less noise. No semicolons, no <code>.then</code> ladder, no <code>=== true</code>, no
+      <code>options || {'{}'}</code>. Every line on the right passes the config, and every line on the left is reported
+      by it. The rest of this post walks through what changed and why.
+    </p>
+
+    <h2>A style in your head drifts. A style in a config doesn't.</h2>
+    <p>
+      Every team has a style. Most of the time it lives in people's heads, in a wiki page nobody reads, and in review
+      comments like "nit: we use arrow functions here". People forget, new people never knew, and every review spends
+      some of its time on how the code looks instead of what it does.
+    </p>
+    <p>
+      A style that lives in a config is applied on every save, in every file, by every contributor. Nobody has to
+      remember it, and nobody has to be the person who points it out. That is the whole idea of Glorification: take
+      a modern coding style and make it something a machine checks.
+    </p>
+
+    <h2>What modern looks like</h2>
+
+    <h3>1. No semicolons, except the one place you need one</h3>
+    <p>
+      JavaScript inserts semicolons for you. In practice there is exactly one trap: a line that starts with
+      <code>(</code>, <code>[</code> or a backtick joins the line above it. The modern coding style drops every
+      semicolon and puts that rare one at the <em>start</em> of the risky line, where you can see it.
+    </p>
+    <BeforeAfter before={ex['semi.before']} after={ex['semi.after']} />
+    <p>
+      Prettier (<code>semi: false</code>) and ESLint agree on this rule exactly, so the two tools never undo each
+      other's work.
+    </p>
+
+    <h3>2. Arrow functions, and short ones where possible</h3>
+    <p>
+      Top-level functions are arrow constants. An arrow that only returns a value uses the short form, and one plain
+      parameter needs no parentheses. A <code>function</code> keyword stays only where you really need
+      <code>this</code> or a generator.
+    </p>
+    <BeforeAfter before={ex['arrows.before']} after={ex['arrows.after']} />
+
+    <h3>3. async / await instead of a .then ladder</h3>
+    <p>
+      A promise chain reads inside out. <code>await</code> reads top to bottom, like the rest of your code, and a
+      normal <code>try</code> / <code>catch</code> handles the errors.
+    </p>
+    <BeforeAfter before={ex['async.before']} after={ex['async.after']} />
+
+    <h3>4. Check flags as themselves</h3>
+    <p>
+      <code>if (flag === true)</code> says the same thing twice. The config reports it, and a one-line
+      <code>if</code> needs no braces.
+    </p>
+    <BeforeAfter before={ex['flags.before']} after={ex['flags.after']} />
+
+    <h3>5. Real defaults</h3>
+    <p>
+      <code>= undefined</code> is not a default, <code>options = options || {'{}'}</code> changes a parameter, and an
+      optional parameter before a required one can never be left out. Give the real default in the signature
+      instead.
+    </p>
+    <BeforeAfter before={ex['defaults.before']} after={ex['defaults.after']} />
+
+    <h3>6. Trailing commas, for diffs that tell the truth</h3>
+    <p>
+      Every multi-line object, array, argument list and parameter list ends with a comma. It looks odd for a week. Then
+      you notice your diffs: adding an item touches one line, not two.
+    </p>
+    <div class="diffs">
+      <figure>
+        <figcaption class="bad">✗ Adding "viewer" without trailing commas</figcaption>
+        <Code code={diffBefore} lang="diff" theme="github-dark-default" />
+      </figure>
+      <figure>
+        <figcaption class="good">✓ With trailing commas</figcaption>
+        <Code code={diffAfter} lang="diff" theme="github-dark-default" />
+      </figure>
+    </div>
+
+    <h3>7. Numbers you can read</h3>
+    <p>
+      Quick: is <code>10485760</code> ten million or a hundred million? Numbers of five digits or more use
+      <code>_</code> separators.
+    </p>
+    <BeforeAfter before={ex['numbers.before']} after={ex['numbers.after']} />
+
+    <h3>8. No else after return</h3>
+    <p>
+      Once a branch returns, the code after the <code>if</code> already <em>is</em> the else. Early returns keep
+      the happy path flat and to the left.
+    </p>
+    <BeforeAfter before={ex['returns.before']} after={ex['returns.after']} />
+
+    <h2>Standing on the shoulders of giants</h2>
+    <p>
+      Glorification doesn't start from zero. It merges the three most used rule sets, <strong>Airbnb</strong>,
+      <strong>StandardJS</strong> and <strong><code>eslint:recommended</code></strong>, removes the duplicates, and
+      keeps every bug catcher they agree on: <code>no-undef</code>, <code>eqeqeq</code> (with <code>== null</code>
+      allowed), <code>no-var</code>, <code>no-throw-literal</code>, the Node and Promise checks, and more.
+    </p>
+    <p>
+      It also keeps a few choices that keep code honest: no shadowed names, no nested ternaries, parameters are
+      read-only, every <code>switch</code> has a <code>default</code>, and a function returns a value on every path or
+      on none.
+    </p>
+    <p>
+      And it allows what a modern style simply allows: <code>i++</code>, bitwise operators,
+      <code>a = b = c()</code>, object spread, and <code>_private</code> helpers. A rule that only makes you type
+      more is not in the config.
+    </p>
+
+    <h2>Go all the way: the optional extras</h2>
+    <p>
+      The base config is the style everyone can live with. The extras go further. Each one is off by default, and you
+      add only the ones you want.
+    </p>
+
+    <h3>Sorting</h3>
+    <p>
+      A sorted file reads like a table: you find a key, a field or an import without scanning. Object keys,
+      destructuring, class fields and named imports are A to Z, and the constructor is always the first member of a
+      class.
+    </p>
+    <BeforeAfter before={ex['sorting.before']} after={ex['sorting.after']} afterLabel="With sorting" />
+
+    <h3>Aliases</h3>
+    <p>
+      <code>../../</code> paths break the moment you move a file. With Node's subpath imports every folder gets a
+      stable name, and builtins carry the <code>node:</code> prefix.
+    </p>
+    <BeforeAfter before={ex['aliases.before']} after={ex['aliases.after']} afterLabel="With aliases" />
+
+    <h3>JSDoc</h3>
+    <p>
+      Every function, class and method gets a JSDoc block, written the modern way: the description is a sentence,
+      shapes are named <code>@typedef</code>s, arrays are <code>T[]</code>, and a bare <code>Function</code> is never
+      enough.
+    </p>
+    <BeforeAfter before={ex['jsdoc.before']} after={ex['jsdoc.after']} afterLabel="With the JSDoc extra" />
+
+    <Code code={ex['setup.extras']} lang="js" theme="github-dark-default" />
+
+    <h3>And a few habits no tool can check</h3>
+    <p>
+      The last step is done by hand, in code review: parameters in order (required A to Z, then optional A to Z),
+      long lines broken after <code>&&</code> and <code>||</code>, constants in <code>UPPER_CASE</code>, one-line
+      comments that say what or why (never the history), and end-of-line comments that line up:
+    </p>
+    <BeforeAfter after={ex['aligned.after']} afterLabel="Hand-applied" />
+
+    <h2>ESLint and Prettier that never fight</h2>
+    <p>
+      The usual setup has a quiet war in it: Prettier formats, ESLint complains, ESLint fixes, Prettier formats
+      again. Glorification's two packages were built together and agree on every rule they share: quotes,
+      semicolons, commas, indentation and line width. You can run them in any order and get the same file. On save in
+      WebStorm, ESLint runs first and Prettier second, and nothing flips back and forth.
+    </p>
+
+    <h2>Two minutes to set up</h2>
+    <Code code={install} lang="bash" theme="github-dark-default" />
+    <div class="diffs">
+      <Code code={ex['setup.eslint']} lang="js" theme="github-dark-default" />
+      <Code code={prettierSetup} lang="json" theme="github-dark-default" />
+    </div>
+    <p>
+      <strong>WebStorm:</strong> turn on <em>Run on save</em> for Prettier and <em>Run eslint --fix on save</em> for
+      ESLint, and turn off <em>Reformat code</em> in Actions on Save. <strong>VS Code:</strong>
+    </p>
+    <Code code={vscode} lang="json" theme="github-dark-default" />
+    <p>
+      TypeScript is one more line: add <code>@glorification/eslint-config/ts</code> after the base config.
+    </p>
+
+    <h2>Try it</h2>
+    <p>
+      Install it on a project you know well, run <code>npm run lint -- --fix</code>, and read the diff. Most of it
+      fixes itself. What's left is usually worth a look.
+    </p>
+    <p class="links">
+      <a href="https://www.npmjs.com/package/@glorification/eslint-config" target="_blank" rel="noopener">npm: eslint-config</a>
+      <a href="https://www.npmjs.com/package/@glorification/prettier-config" target="_blank" rel="noopener">npm: prettier-config</a>
+      <a href="https://github.com/itaym/glorification" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/itaym/glorification#readme" target="_blank" rel="noopener">Every rule, with examples</a>
+    </p>
+  </article>
+</Base>
+
+<style>
+  :global(.wrap:has(.blog)) {
+    max-width: 1100px;
+  }
+
+  .blog {
+    font-size: 1.02rem;
+  }
+
+  .blog > p,
+  .blog > h1,
+  .blog > h2,
+  .blog > h3 {
+    max-width: 760px;
+  }
+
+  .kicker {
+    color: var(--text-faint);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+    line-height: 1.15;
+    margin: 0.4rem 0 1rem;
+  }
+
+  .lead {
+    color: var(--text-dim);
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    border-top: 1px solid var(--border);
+    font-size: 1.6rem;
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    margin-top: 2.5rem;
+  }
+
+  .blog :global(pre) {
+    background: var(--code-bg) !important;
+    font-size: 0.82rem;
+  }
+
+  .diffs {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+    margin: 1.25rem 0 2rem;
+  }
+
+  @media (min-width: 960px) {
+    .diffs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .diffs figure {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .diffs :global(pre) {
+    margin: 0;
+  }
+
+  figcaption {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .bad {
+    color: #f87171;
+  }
+
+  .good {
+    color: #4ade80;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.4rem;
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+</style>
