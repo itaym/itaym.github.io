@@ -115,10 +115,12 @@ const connect = (host, options = {}, port = 8080) => open(host, port, options)
 const MAX_UPLOAD = 10485760;
 const TIMEOUT = 30000;
 const RETRY_DELAY = 1000;
+const SEED = 0x2f6e2b1;
 //// numbers.after
 const MAX_UPLOAD = 10_485_760
 const TIMEOUT = 30_000
 const RETRY_DELAY = 1000
+const SEED = 0x2f6e2b1
 //// returns.before
 function priceLabel(price) {
   if (price === 0) {
@@ -188,3 +190,22 @@ import jsdoc from '@glorification/eslint-config/jsdoc'
 import sorting from '@glorification/eslint-config/sorting'
 
 export default [...glorification, ...aliases, ...jsdoc, ...sorting]
+//// custom.config
+// eslint.config.js
+import glorification from '@glorification/eslint-config'
+
+export default [
+    ...glorification,
+    {
+        rules: {
+            'no-console': 'off', // a rule you find annoying
+            'no-nested-ternary': 'error', // a rule you miss
+        },
+    },
+    {
+        files: ['**/*.test.js'],
+        rules: {
+            'no-param-reassign': 'off', // only for some files
+        },
+    },
+]

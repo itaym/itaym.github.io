@@ -147,7 +147,7 @@ const vscode = `// .vscode/settings.json
     <h3>7. Numbers you can read</h3>
     <p>
       Quick: is <code>10485760</code> ten million or a hundred million? Numbers of five digits or more use
-      <code>_</code> separators.
+      <code>_</code> separators. Hex, binary and octal stay as you wrote them.
     </p>
     <BeforeAfter before={ex['numbers.before']} after={ex['numbers.after']} />
 
@@ -166,14 +166,14 @@ const vscode = `// .vscode/settings.json
       allowed), <code>no-var</code>, <code>no-throw-literal</code>, the Node and Promise checks, and more.
     </p>
     <p>
-      It also keeps a few choices that keep code honest: no shadowed names, no nested ternaries, parameters are
-      read-only, every <code>switch</code> has a <code>default</code>, and a function returns a value on every path or
-      on none.
+      It also keeps a few choices that keep code honest: no shadowed names, parameters are read-only, every
+      <code>switch</code> has a <code>default</code>, and a function returns a value on every path or on none.
     </p>
     <p>
       And it allows what a modern style simply allows: <code>i++</code>, bitwise operators,
-      <code>a = b = c()</code>, object spread, and <code>_private</code> helpers. A rule that only makes you type
-      more is not in the config.
+      <code>a = b = c()</code>, object spread, <code>_private</code> helpers, nested ternaries, <code>for…in</code>,
+      <code>(a, b)</code> sequences and <code>() =&gt; (count = 0)</code>. A rule that only makes you type more is
+      not in the config.
     </p>
 
     <h2>Go all the way: the optional extras</h2>
@@ -210,10 +210,25 @@ const vscode = `// .vscode/settings.json
     <h3>And a few habits no tool can check</h3>
     <p>
       The last step is done by hand, in code review: parameters in order (required A to Z, then optional A to Z),
-      long lines broken after <code>&&</code> and <code>||</code>, constants in <code>UPPER_CASE</code>, one-line
-      comments that say what or why (never the history), and end-of-line comments that line up:
+      long lines broken after <code>&&</code> and <code>||</code>, constants in <code>UPPER_CASE</code>, every object
+      <code>@typedef</code> with its own factory, one-line comments that say what or why (never the history), and
+      end-of-line comments that line up:
     </p>
     <BeforeAfter after={ex['aligned.after']} afterLabel="Hand-applied" />
+
+    <h2>Make it yours</h2>
+    <p>
+      The modern coding style is a starting point, not a cage. Don't like a rule? Turn it off. Miss one? Add it. Your
+      <code>eslint.config.js</code> is a normal flat config: put your changes <strong>after</strong> the base config,
+      and for each rule the last setting wins.
+    </p>
+    <Code code={ex['custom.config']} lang="js" theme="github-dark-default" />
+    <p>
+      Some good rules are off on purpose, like <code>no-sequences</code>, <code>no-nested-ternary</code> and
+      <code>guard-for-in</code>. The README lists them under
+      <a href="https://github.com/itaym/glorification#want-it-stricter-consider-adding" target="_blank" rel="noopener">Want it stricter?</a>,
+      with what each one catches.
+    </p>
 
     <h2>ESLint and Prettier that never fight</h2>
     <p>
